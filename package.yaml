@@ -1,0 +1,34 @@
+name:                Euler
+version:             0.1.0.0
+synopsis:            Nasy's Haskell Solutions of Project Euler
+description:         ! "Nasy's Haskell Solutions of Project
+  Euler.  Here are my code and solutions for Project Euler,
+  along with my roughly ideology.  Although some moments
+  I realised some advanced strategy from others,
+  all the code here comes from me."
+homepage:            https://github.com/nasyxx/Euler
+license:             LGPL-3.0
+author:              Nasy
+maintainer:          nasyxx+euler@gmail.com
+copyright:           Nasy © 2019
+category:            Math
+
+extra-source-files:
+- README.org
+
+ghc-options:
+- -Wall
+- -fwarn-tabs
+- -fwarn-incomplete-uni-patterns
+- -fwarn-incomplete-record-updates
+
+dependencies:
+  - base
+
+executables:
+  Euler:
+    source-dirs:     src
+    main:            Main.hs
+
+library:
+  source-dirs:       questions
