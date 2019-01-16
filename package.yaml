@@ -1,12 +1,14 @@
-name:                Euler
-version:             0.1.0.0
+name:                nasy-euler
+version:             0.1.2.0
 synopsis:            Nasy's Haskell Solutions of Project Euler
-description:         ! "Nasy's Haskell Solutions of Project
+description:         >
+  "Nasy's Haskell Solutions of Project
   Euler.  Here are my code and solutions for Project Euler,
   along with my roughly ideology.  Although some moments
   I realised some advanced strategy from others,
   all the code here comes from me."
-homepage:            https://github.com/nasyxx/Euler
+homepage:            https://github.com/nasyxx/project-euler-solutions
+github:              nasyxx/project-euler-solutions
 license:             LGPL-3.0
 author:              Nasy
 maintainer:          nasyxx+euler@gmail.com
@@ -24,11 +26,18 @@ ghc-options:
 
 dependencies:
   - base
+  - pretty-simple
 
 executables:
   Euler:
     source-dirs:     src
     main:            Main.hs
+    dependencies:
+    - nasy-euler
 
 library:
   source-dirs:       questions
+  exposed-modules:
+  - Euler.Que
+  - Euler.Que.Q1
+  - Euler.Que.Q2

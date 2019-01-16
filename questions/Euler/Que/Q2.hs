@@ -31,42 +31,29 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 --------------------------------------------------------------------------------
 -- |
--- Filename   : Main.hs
+-- Filename   : Q2.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
--- License    : GPL-3.0+
+-- License    : LGPL-3.0
 --
 -- Maintainer : Nasy <nasyxx+haskell@gmail.com>
 --
 -- Nasy's Haskell Solutions of Project Euler.
 --
 -- https://github.com/nasyxx/project-euler-solutions
+-- https://projecteuler.net/problem=2
 --
 --------------------------------------------------------------------------------
-module Main where
---------------------------------------------------------------------------------
-import           System.Environment             ( getArgs )
-import           Data.Char                      ( isNumber )
---------------------------------------------------------------------------------
-import           Euler.Que
---------------------------------------------------------------------------------
 
-main :: IO ()
-main = getArgs >>= putStrLn . parse
+module Euler.Que.Q2
+    ( fib
+    , ans
+    )
+where
 
 
-parse :: [String] -> String
-parse []   = "No question."
-parse args = unlines . map showAnswer $ args
+fib :: Num t => t -> t -> [t]
+fib a b = a : fib b (a + b)
 
-
-showAnswer :: String -> String
-showAnswer q | all isNumber q = "Question " ++ q ++ ": " ++ ans q
-             | q == "all"     = parse ["1", "2"]
-             | otherwise      = "Not a question."
-
-
-ans :: String -> String
-ans "1" = show q1
-ans "2" = show q2
-ans _   = "No Answer."
+ans :: Integer
+ans = sum . filter even . takeWhile (< 4000000) $ fib 1 2

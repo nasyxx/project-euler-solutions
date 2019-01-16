@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-type-defaults #-}
 {-
  Excited without bugs, have fun ("▔□▔)/hi~♡ Nasy.
  ------------------------------------------------
@@ -31,42 +32,29 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 --------------------------------------------------------------------------------
 -- |
--- Filename   : Main.hs
+-- Filename   : Q1.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
--- License    : GPL-3.0+
+-- License    : LGPL-3.0
+-- Copyright  : Nasy © 2019
 --
--- Maintainer : Nasy <nasyxx+haskell@gmail.com>
+-- Maintainer : Nasy <nasyxx+euler@gmail.com>
 --
 -- Nasy's Haskell Solutions of Project Euler.
 --
 -- https://github.com/nasyxx/project-euler-solutions
+-- https://projecteuler.net/problem=1
 --
 --------------------------------------------------------------------------------
-module Main where
---------------------------------------------------------------------------------
-import           System.Environment             ( getArgs )
-import           Data.Char                      ( isNumber )
---------------------------------------------------------------------------------
-import           Euler.Que
---------------------------------------------------------------------------------
+module Euler.Que.Q1
+    ( ans
+    , sum_multiples_3_5
+    )
+where
 
-main :: IO ()
-main = getArgs >>= putStrLn . parse
+sum_multiples_3_5 :: Integral c => c -> c
+sum_multiples_3_5 n =
+    sum . filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) $ [1 .. n - 1]
 
-
-parse :: [String] -> String
-parse []   = "No question."
-parse args = unlines . map showAnswer $ args
-
-
-showAnswer :: String -> String
-showAnswer q | all isNumber q = "Question " ++ q ++ ": " ++ ans q
-             | q == "all"     = parse ["1", "2"]
-             | otherwise      = "Not a question."
-
-
-ans :: String -> String
-ans "1" = show q1
-ans "2" = show q2
-ans _   = "No Answer."
+ans :: Integer
+ans = sum_multiples_3_5 1000

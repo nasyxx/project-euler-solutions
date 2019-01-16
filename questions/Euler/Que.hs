@@ -43,30 +43,12 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- https://github.com/nasyxx/project-euler-solutions
 --
 --------------------------------------------------------------------------------
-module Main where
---------------------------------------------------------------------------------
-import           System.Environment             ( getArgs )
-import           Data.Char                      ( isNumber )
---------------------------------------------------------------------------------
-import           Euler.Que
---------------------------------------------------------------------------------
 
-main :: IO ()
-main = getArgs >>= putStrLn . parse
+module Euler.Que where
+import qualified Euler.Que.Q1                  as Q1
+import qualified Euler.Que.Q2                  as Q2
 
-
-parse :: [String] -> String
-parse []   = "No question."
-parse args = unlines . map showAnswer $ args
-
-
-showAnswer :: String -> String
-showAnswer q | all isNumber q = "Question " ++ q ++ ": " ++ ans q
-             | q == "all"     = parse ["1", "2"]
-             | otherwise      = "Not a question."
-
-
-ans :: String -> String
-ans "1" = show q1
-ans "2" = show q2
-ans _   = "No Answer."
+q1 :: Integer
+q1 = Q1.ans
+q2 :: Integer
+q2 = Q2.ans

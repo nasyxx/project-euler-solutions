@@ -1,6 +1,6 @@
 # Custom
 TAGS
-Euler.cabal
+*.cabal
 
 # Created by https://www.gitignore.io/api/haskell,macOS
 # Edit at https://www.gitignore.io/?templates=haskell,macOS
