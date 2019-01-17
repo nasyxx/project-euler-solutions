@@ -48,7 +48,9 @@ module Main where
 import           System.Environment             ( getArgs )
 import           Data.Char                      ( isNumber )
 --------------------------------------------------------------------------------
-import           Euler.Que
+import           Euler.Que                      ( answers
+                                                , counts
+                                                )
 --------------------------------------------------------------------------------
 
 main :: IO ()
@@ -56,17 +58,15 @@ main = getArgs >>= putStrLn . parse
 
 
 parse :: [String] -> String
-parse []   = "No question."
-parse args = unlines . map showAnswer $ args
-
+parse []      = unlines . map show $ answers
+parse ["all"] = unlines . map show $ answers
+parse args    = unlines . map showAnswer $ args
 
 showAnswer :: String -> String
-showAnswer q | all isNumber q = "Question " ++ q ++ ": " ++ ans q
-             | q == "all"     = parse ["1", "2"]
-             | otherwise      = "Not a question."
-
-
-ans :: String -> String
-ans "1" = show q1
-ans "2" = show q2
-ans _   = "No Answer."
+showAnswer qs
+    | all isNumber qs && q <= counts && q > 0 =  desc qs
+    ++ show (answers !! (q - 1))
+    | otherwise = desc qs ++ "No answer"
+  where
+    desc qs' = "Question " ++ qs' ++ ": "
+    q = read qs :: Int

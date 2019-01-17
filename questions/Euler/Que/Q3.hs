@@ -31,26 +31,25 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 --------------------------------------------------------------------------------
 -- |
--- Filename   : Main.hs
--- Project    : nasy-euler
+-- Filename   : Q3.hs
+-- Project    : Que
 -- Author     : Nasy
 -- License    : GPL-3.0+
 --
 -- Maintainer : Nasy <nasyxx+haskell@gmail.com>
 --
--- Nasy's Haskell Solutions of Project Euler.
 --
--- https://github.com/nasyxx/project-euler-solutions
 --
 --------------------------------------------------------------------------------
 
-module Euler.Que where
-import qualified Euler.Que.Q1                  as Q1
-import qualified Euler.Que.Q2                  as Q2
-import qualified Euler.Que.Q3                  as Q3
+module Euler.Que.Q3 where
 
-answers :: [Integer]
-answers = [Q1.ans, Q2.ans, Q3.ans]
+primesFactors :: Integral t => t -> [t]
+primesFactors 1 = []
+primesFactors n | factors == [] = [n]
+                | otherwise = factors ++ primesFactors (n `div` (head factors))
+  where
+    factors = take 1 . filter ((== 0) . mod n) $ 2 : [3, 5 .. (n `div` 2)]
 
-counts :: Int
-counts = 3
+ans :: Integer
+ans = last . primesFactors $ 600851475143

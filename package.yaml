@@ -39,5 +39,3 @@ library:
   source-dirs:       questions
   exposed-modules:
   - Euler.Que
-  - Euler.Que.Q1
-  - Euler.Que.Q2
