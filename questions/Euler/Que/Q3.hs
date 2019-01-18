@@ -38,7 +38,10 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 --
 -- Maintainer : Nasy <nasyxx+haskell@gmail.com>
 --
+-- Nasy's Haskell Solutions of Project Euler.
 --
+-- https://github.com/nasyxx/project-euler-solutions
+-- https://projecteuler.net/problem=3
 --
 --------------------------------------------------------------------------------
 
