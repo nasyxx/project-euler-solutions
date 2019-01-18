@@ -31,26 +31,31 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 --------------------------------------------------------------------------------
 -- |
--- Filename   : Main.hs
+-- Filename   : P1.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
--- License    : GPL-3.0+
+-- License    : LGPL-3.0
+-- Copyright  : Nasy © 2019
 --
--- Maintainer : Nasy <nasyxx+haskell@gmail.com>
+-- Maintainer : Nasy <nasyxx+euler@gmail.com>
 --
 -- Nasy's Haskell Solutions of Project Euler.
 --
 -- https://github.com/nasyxx/project-euler-solutions
+-- https://projecteuler.net/problem=1
+--
+-- Exhaust the numbers and sum them.
+--
+-- Maybe there are other simple ways to get the answer, but if we use a
+-- computer, for this not too big number, exhaustiveness is also a very
+-- convenient method.
 --
 --------------------------------------------------------------------------------
+module Euler.Problem.P1 where
 
-module Euler.Que where
-import qualified Euler.Que.Q1                  as Q1
-import qualified Euler.Que.Q2                  as Q2
-import qualified Euler.Que.Q3                  as Q3
+sum_multiples_3_5 :: Integral c => c -> c
+sum_multiples_3_5 n =
+    sum . filter (\x -> x `mod` 3 == 0 || x `mod` 5 == 0) $ [1 .. n - 1]
 
-answers :: [Integer]
-answers = [Q1.ans, Q2.ans, Q3.ans]
-
-counts :: Int
-counts = 3
+ans :: Integer
+ans = sum_multiples_3_5 1000
