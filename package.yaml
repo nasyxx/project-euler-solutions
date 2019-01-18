@@ -36,6 +36,6 @@ executables:
     - nasy-euler
 
 library:
-  source-dirs:       questions
+  source-dirs:       problems
   exposed-modules:
-  - Euler.Que
+  - Euler.Problem

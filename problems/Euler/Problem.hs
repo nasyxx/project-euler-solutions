@@ -31,7 +31,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 --------------------------------------------------------------------------------
 -- |
--- Filename   : Main.hs
+-- Filename   : Problem.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
 -- License    : LGPL-3.0
@@ -43,33 +43,15 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- https://github.com/nasyxx/project-euler-solutions
 --
 --------------------------------------------------------------------------------
-module Main where
---------------------------------------------------------------------------------
-import           System.Environment             ( getArgs )
-import           Data.Char                      ( isNumber )
---------------------------------------------------------------------------------
-import           Euler.Problem                  ( answers
-                                                , counts
-                                                )
---------------------------------------------------------------------------------
 
-main :: IO ()
-main = getArgs >>= putStrLn . parse
+module Euler.Problem where
+import qualified Euler.Problem.P1              as P1
+import qualified Euler.Problem.P2              as P2
+import qualified Euler.Problem.P3              as P3
+import qualified Euler.Problem.P4              as P4
 
+answers :: [Integer]
+answers = [P1.ans, P2.ans, P3.ans, P4.ans]
 
-parse :: [String] -> String
-parse [] =
-    unlines
-        . map (\(ans, idx) -> "Question " ++ show idx ++ ": " ++ show ans)
-        $ zip answers [1 :: Integer ..]
-parse ["all"] = parse []
-parse args    = unlines . map showAnswer $ args
-
-showAnswer :: String -> String
-showAnswer ps
-    | all isNumber ps && p <= counts && p > 0 =  desc ps
-    ++ show (answers !! (p - 1))
-    | otherwise = desc ps ++ "No answer"
-  where
-    desc ps' = "Question " ++ ps' ++ ": "
-    p = read ps :: Int
+counts :: Int
+counts = 4
