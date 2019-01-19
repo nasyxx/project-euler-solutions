@@ -67,7 +67,7 @@ answers = zipWith
     , Left P3.ans
     , Left P4.ans
     , Left P5.ans
-    , Right P6.ans
+    , Left $ truncate P6.ans
     ]
   where
     set idx (Left  n) = I idx n
