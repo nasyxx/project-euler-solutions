@@ -50,9 +50,28 @@ import qualified Euler.Problem.P2              as P2
 import qualified Euler.Problem.P3              as P3
 import qualified Euler.Problem.P4              as P4
 import qualified Euler.Problem.P5              as P5
+import qualified Euler.Problem.P6              as P6
 
-answers :: [Integer]
-answers = [P1.ans, P2.ans, P3.ans, P4.ans, P5.ans]
+data Answer = I Int Integer | F Int Float
+
+instance Show Answer where
+    show (I p n) = "Problem " ++ show p ++ ": " ++ show n
+    show (F p n) = "Problem " ++ show p ++ ": " ++ show n
+
+answers :: [Answer]
+answers = zipWith
+    set
+    [1 ..]
+    [ Left P1.ans
+    , Left P2.ans
+    , Left P3.ans
+    , Left P4.ans
+    , Left P5.ans
+    , Right P6.ans
+    ]
+  where
+    set idx (Left  n) = I idx n
+    set idx (Right n) = F idx n
 
 counts :: Int
-counts = 5
+counts = length answers

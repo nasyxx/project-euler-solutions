@@ -45,8 +45,10 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 --------------------------------------------------------------------------------
 module Main where
 --------------------------------------------------------------------------------
+import           Data.Char                      ( isNumber
+                                                , toLower
+                                                )
 import           System.Environment             ( getArgs )
-import           Data.Char                      ( isNumber )
 --------------------------------------------------------------------------------
 import           Euler.Problem                  ( answers
                                                 , counts
@@ -56,20 +58,13 @@ import           Euler.Problem                  ( answers
 main :: IO ()
 main = getArgs >>= putStrLn . parse
 
-
 parse :: [String] -> String
-parse [] =
-    unlines
-        . map (\(ans, idx) -> "Question " ++ show idx ++ ": " ++ show ans)
-        $ zip answers [1 :: Integer ..]
-parse ["all"] = parse []
-parse args    = unlines . map showAnswer $ args
+parse [] = unlines . map show $ answers
+parse args@(a : _)
+    | map toLower a == "all"  = parse []
+    | all (all isNumber) args = unlines . map (showAnswer . read) $ args
+    | otherwise               = "Not a problem"
 
-showAnswer :: String -> String
-showAnswer ps
-    | all isNumber ps && p <= counts && p > 0 =  desc ps
-    ++ show (answers !! (p - 1))
-    | otherwise = desc ps ++ "No answer"
-  where
-    desc ps' = "Question " ++ ps' ++ ": "
-    p = read ps :: Int
+showAnswer :: Int -> String
+showAnswer n | n < 1 || n > counts = "Problem " ++ show n ++ ": No answer"
+             | otherwise           = show $ answers !! (n - 1)
