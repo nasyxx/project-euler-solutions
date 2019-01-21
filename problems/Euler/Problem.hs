@@ -45,6 +45,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 --------------------------------------------------------------------------------
 
 module Euler.Problem where
+
 import qualified Euler.Problem.P1              as P1
 import qualified Euler.Problem.P2              as P2
 import qualified Euler.Problem.P3              as P3
@@ -52,12 +53,14 @@ import qualified Euler.Problem.P4              as P4
 import qualified Euler.Problem.P5              as P5
 import qualified Euler.Problem.P6              as P6
 import qualified Euler.Problem.P7              as P7
+import qualified Euler.Problem.P8              as P8
+
 
 data Answer = I Int Integer | F Int Float
 
 instance Show Answer where
-    show (I p n) = "Problem " ++ show p ++ ": " ++ show n
-    show (F p n) = "Problem " ++ show p ++ ": " ++ show n
+    show (I p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
+    show (F p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
 
 answers :: [Answer]
 answers = zipWith
@@ -70,6 +73,7 @@ answers = zipWith
     , Left P5.ans
     , Left $ truncate P6.ans
     , Left P7.ans
+    , Left P8.ans
     ]
   where
     set idx (Left  n) = I idx n
