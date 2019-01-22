@@ -1,3 +1,4 @@
+{-# LANGUAGE TypeOperators #-}
 {-
  Excited without bugs, have fun ("▔□▔)/hi~♡ Nasy.
  ------------------------------------------------
@@ -31,7 +32,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 --------------------------------------------------------------------------------
 -- |
--- Filename   : Problem.hs
+-- Filename   : P9.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
 -- License    : LGPL-3.0
@@ -41,45 +42,28 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- Nasy's Haskell Solutions of Project Euler.
 --
 -- https://github.com/nasyxx/project-euler-solutions
+-- https://projecteuler.net/problem=9
 --
+-- Generate Pythagorean Triplets.
+--
+--           a^2 +     b^2 = c^2
+-- (m^2 - n^2)^2 + (2mn)^2 = (m^2 + n^2)^2
+--
+--    a + b + c = s
+-- => 2 < m < sqrt (s/2)
+-- => 1 < n < m - 1
 --------------------------------------------------------------------------------
 
-module Euler.Problem where
+module Euler.Problem.P9 where
 
-import qualified Euler.Problem.P1              as P1
-import qualified Euler.Problem.P2              as P2
-import qualified Euler.Problem.P3              as P3
-import qualified Euler.Problem.P4              as P4
-import qualified Euler.Problem.P5              as P5
-import qualified Euler.Problem.P6              as P6
-import qualified Euler.Problem.P7              as P7
-import qualified Euler.Problem.P8              as P8
-import qualified Euler.Problem.P9              as P9
-
-
-data Answer = I Int Integer | F Int Float
-
-instance Show Answer where
-    show (I p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
-    show (F p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
-
-answers :: [Answer]
-answers = zipWith
-    set
-    [1 ..]
-    [ Left P1.ans
-    , Left P2.ans
-    , Left P3.ans
-    , Left P4.ans
-    , Left P5.ans
-    , Left $ truncate P6.ans
-    , Left P7.ans
-    , Left P8.ans
-    , Left P9.ans
+triplets :: Integral a => a -> [(a, a, a)]
+triplets s = filter
+    (\(a, b, c) -> a + b + c == s)
+    [ (m * m - n * n, 2 * m * n, m * m + n * n)
+    | m <- [2 .. (floor . sqrt $ (fromIntegral s :: Float))]
+    , n <- [1 .. (m - 1)]
     ]
-  where
-    set idx (Left  n) = I idx n
-    set idx (Right n) = F idx n
 
-counts :: Int
-counts = length answers
+
+ans :: Integer
+ans = product . (\(a, b, c) -> [a, b, c]) . head $ triplets 1000
