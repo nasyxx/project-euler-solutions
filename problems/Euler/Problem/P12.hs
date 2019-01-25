@@ -31,7 +31,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 --------------------------------------------------------------------------------
 -- |
--- Filename   : Problem.hs
+-- Filename   : P12.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
 -- License    : GPL-3.0+
@@ -41,51 +41,31 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- Nasy's Haskell Solutions of Project Euler.
 --
 -- https://github.com/nasyxx/project-euler-solutions
+-- https://projecteuler.net/problem=12
 --
+-- | * Count divisors.
+-- |
+-- |   A number n has prime factors p1, p2, ..., pn
+-- |
+-- |     n = p1 ^ a1 x p2 ^ a2 x ... x pn ^ an
+-- |
+-- |   And, the number of factors of p1 ^ a1 is (a1 + 1)
+-- |
+-- |     p1 ^ a1 = 1 x p1 x ..(a1).. x p1
+-- |
+-- |  Thus, the number of factors of n is
+-- |
+-- |     (a1 + 1) x (a2 + 1) x .. x (an + 1)
+-- |
 --------------------------------------------------------------------------------
 
-module Euler.Problem where
+module Euler.Problem.P12 where
 
-import qualified Euler.Problem.P1              as P1
-import qualified Euler.Problem.P2              as P2
-import qualified Euler.Problem.P3              as P3
-import qualified Euler.Problem.P4              as P4
-import qualified Euler.Problem.P5              as P5
-import qualified Euler.Problem.P6              as P6
-import qualified Euler.Problem.P7              as P7
-import qualified Euler.Problem.P8              as P8
-import qualified Euler.Problem.P9              as P9
-import qualified Euler.Problem.P10             as P10
-import qualified Euler.Problem.P11             as P11
-import qualified Euler.Problem.P12             as P12
+import           Data.List                      ( group )
+import           Euler                          ( primeFactors )
 
+nDivisors :: Integer -> Integer
+nDivisors = toInteger . product . map ((+ 1) . length) . group . primeFactors
 
-data Answer = I Int Integer | F Int Float
-
-instance Show Answer where
-    show (I p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
-    show (F p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
-
-answers :: [Answer]
-answers = zipWith
-    set
-    [1 ..]
-    [ Left P1.ans
-    , Left P2.ans
-    , Left P3.ans
-    , Left P4.ans
-    , Left P5.ans
-    , Left $ truncate P6.ans
-    , Left P7.ans
-    , Left P8.ans
-    , Left P9.ans
-    , Left P10.ans
-    , Left P11.ans
-    , Left P12.ans
-    ]
-  where
-    set idx (Left  n) = I idx n
-    set idx (Right n) = F idx n
-
-counts :: Int
-counts = length answers
+ans :: Integer
+ans = head . filter ((> 500) . nDivisors) $ scanl1 (+) [1 ..]
