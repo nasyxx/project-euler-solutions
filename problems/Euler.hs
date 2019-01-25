@@ -55,6 +55,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 module Euler
     ( primes
+    , primeFactors
     , wheel
     , union
     , minus
@@ -72,11 +73,13 @@ primes :: [Integer]
 primes = 2 : 3 : 5 : 7 : r ((11 :) . tail . gaps 11 wheel . merge . roll)
     where r x = x (r x)
 
+
 -- | Merge parts of results
 -- It is equivalent to fold tree with union.
 merge :: Ord a => [[a]] -> [a]
 merge ~((p : ps) : t) = p : ps `union` merge (pairs t)
     where pairs ~(x : y : t') = x `union` y : pairs t'
+
 
 -- | Wheel 210
 -- loop:
@@ -85,10 +88,12 @@ merge ~((p : ps) : t) = p : ps `union` merge (pairs t)
 wheel :: [Integer]
 wheel = cycle $ zipWith (-) =<< tail $ filter ((== 1) . gcd 210) [11 .. 221]
 
+
 -- | Gaps from wheel.
 gaps :: Integral a => a -> [a] -> [a] -> [a]
 gaps k ~(w : ws) ~s@(c : cs) | k == c    = gaps (k + w) ws cs
                              | otherwise = k : gaps (k + w) ws s
+
 
 -- | Roll the wheel to pick out the start point of each primes.
 roll :: [Integer] -> [[Integer]]
@@ -97,12 +102,20 @@ roll = map roll'  where
         map (p *) . dropWhile (< p) $ scanl (+) (p - (p - 11) `rem` 210) wheel
 
 
+primeFactors :: Integer -> [Integer]
+primeFactors = factors primes
+  where
+    factors ~ps@(p : ps') n | p * p > n      = [n]
+                            | n `mod` p == 0 = p : factors ps (n `div` p)
+                            | otherwise      = factors ps' n
+
+
 --------------------------------------------------------------------------------
 -- | Useful functions
-
 -- | Integral sqrt of @n@.
 isqrt :: (Integral c, Integral a) => a -> c
 isqrt n = floor . sqrt $ (fromIntegral n :: Double)
+
 
 -- | The minus/difference of two orderd lists.
 minus :: Ord a => [a] -> [a] -> [a]
@@ -112,6 +125,7 @@ minus (x : xs) (y : ys) = case compare x y of
     GT -> minus (x : xs) ys
 minus xs [] = xs
 minus [] xs = xs
+
 
 -- | The union of two orderd lists.
 union :: Ord a => [a] -> [a] -> [a]
