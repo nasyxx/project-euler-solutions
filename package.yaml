@@ -37,4 +37,5 @@ executables:
 library:
   source-dirs:       problems
   exposed-modules:
+  - Euler
   - Euler.Problem
