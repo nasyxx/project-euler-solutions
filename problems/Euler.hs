@@ -34,7 +34,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- Filename   : Euler.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
--- License    : LGPL-3.0
+-- License    : GPL-3.0+
 --
 -- Maintainer : Nasy <nasyxx+euler@gmail.com>
 --
@@ -97,7 +97,8 @@ gaps k ~(w : ws) ~s@(c : cs) | k == c    = gaps (k + w) ws cs
 
 -- | Roll the wheel to pick out the start point of each primes.
 roll :: [Integer] -> [[Integer]]
-roll = map roll'  where
+roll = map roll'
+  where
     roll' p =
         map (p *) . dropWhile (< p) $ scanl (+) (p - (p - 11) `rem` 210) wheel
 

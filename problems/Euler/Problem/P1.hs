@@ -34,7 +34,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- Filename   : P1.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
--- License    : LGPL-3.0
+-- License    : GPL-3.0+
 -- Copyright  : Nasy © 2019
 --
 -- Maintainer : Nasy <nasyxx+euler@gmail.com>
