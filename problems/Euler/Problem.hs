@@ -67,21 +67,19 @@ instance Show Answer where
     show (F p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
 
 answers :: [Answer]
-answers = zipWith
-    set
-    [1 ..]
-    [ Left P1.ans
-    , Left P2.ans
-    , Left P3.ans
-    , Left P4.ans
-    , Left P5.ans
-    , Left $ truncate P6.ans
-    , Left P7.ans
-    , Left P8.ans
-    , Left P9.ans
-    , Left P10.ans
+answers = zipWith set [1 ..] $ reverse
+    [ Left P12.ans
     , Left P11.ans
-    , Left P12.ans
+    , Left P10.ans
+    , Left P9.ans
+    , Left P8.ans
+    , Left P7.ans
+    , Left $ truncate P6.ans
+    , Left P5.ans
+    , Left P4.ans
+    , Left P3.ans
+    , Left P2.ans
+    , Left P1.ans
     ]
   where
     set idx (Left  n) = I idx n
