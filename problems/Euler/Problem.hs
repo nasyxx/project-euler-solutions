@@ -56,6 +56,7 @@ import qualified Euler.Problem.P7              as P7
 import qualified Euler.Problem.P8              as P8
 import qualified Euler.Problem.P9              as P9
 import qualified Euler.Problem.P10             as P10
+import qualified Euler.Problem.P11             as P11
 
 
 data Answer = I Int Integer | F Int Float
@@ -78,6 +79,7 @@ answers = zipWith
     , Left P8.ans
     , Left P9.ans
     , Left P10.ans
+    , Left P11.ans
     ]
   where
     set idx (Left  n) = I idx n
