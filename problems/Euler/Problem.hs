@@ -60,11 +60,12 @@ import qualified Euler.Problem.P11             as P11
 import qualified Euler.Problem.P12             as P12
 
 
-data Answer = I Int Integer | F Int Float
+data Answer = I Int Integer | Io Int (IO Integer) | Ios Int (IO String)
 
-instance Show Answer where
-    show (I p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
-    show (F p n) = "Problem " ++ show p ++ "\t:\t" ++ show n
+showAnswer :: Answer -> IO String
+showAnswer (I   p ans) = pure $ "Problem " ++ show p ++ "\t:\t" ++ show ans
+showAnswer (Io  p ans) = (("Problem " ++ show p ++ "\t:\t") ++) . show <$> ans
+showAnswer (Ios p ans) = (("Problem " ++ show p ++ "\t:\t") ++) <$> ans
 
 answers :: [Answer]
 answers = zipWith set [1 ..] $ reverse
@@ -82,8 +83,9 @@ answers = zipWith set [1 ..] $ reverse
     , Left P1.ans
     ]
   where
-    set idx (Left  n) = I idx n
-    set idx (Right n) = F idx n
+    set idx (Left  ans        ) = I idx ans
+    set idx (Right (Left  ans)) = Io idx ans
+    set idx (Right (Right ans)) = Ios idx ans
 
 counts :: Int
 counts = length answers

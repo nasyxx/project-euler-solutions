@@ -45,6 +45,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 --------------------------------------------------------------------------------
 module Main where
 --------------------------------------------------------------------------------
+import           Control.Monad                  ( mapM )
 import           Data.Char                      ( isNumber
                                                 , toLower
                                                 )
@@ -52,19 +53,20 @@ import           System.Environment             ( getArgs )
 --------------------------------------------------------------------------------
 import           Euler.Problem                  ( answers
                                                 , counts
+                                                , showAnswer
                                                 )
 --------------------------------------------------------------------------------
 
 main :: IO ()
-main = getArgs >>= putStrLn . parse
+main = getArgs >>= parse >>= putStrLn
 
-parse :: [String] -> String
-parse [] = unlines . map show $ answers
+parse :: [String] -> IO String
+parse [] = unlines <$> mapM showAnswer answers
 parse args@(a : _)
     | map toLower a == "all"  = parse []
-    | all (all isNumber) args = unlines . map (showAnswer . read) $ args
-    | otherwise               = "Not a problem"
-
-showAnswer :: Int -> String
-showAnswer n | n < 1 || n > counts = "Problem " ++ show n ++ ": No answer"
-             | otherwise           = show $ answers !! (n - 1)
+    | all (all isNumber) args = mapM (answer . read) args >>= pure . unlines
+    | otherwise               = pure "Not a problem"
+  where
+    answer n | n < 1 || n > counts =
+        pure $ "Problem " ++ show n ++ ": No answer"
+    answer n = showAnswer $ answers !! (n - 1)
