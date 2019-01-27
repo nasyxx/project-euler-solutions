@@ -24,6 +24,7 @@ ghc-options:
 - -fwarn-incomplete-record-updates
 
 dependencies:
+  - array
   - base
   - pretty-simple
 
