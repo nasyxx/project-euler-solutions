@@ -51,4 +51,4 @@ solve :: String -> String
 solve = take 10 . show . sum . map (read :: String -> Integer) . lines
 
 ans :: IO String
-ans = solve <$> readFile "P13"
+ans = solve <$> readFile "data/P13"
