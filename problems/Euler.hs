@@ -42,8 +42,12 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 --
 -- Include:
 --------------------------------------------------------------------------------
--- | Useful functions
+-- | Useful Math Functions
 --   + @isqrt n@ :: Integral sqrt of n.
+--   + @permutations n k@ :: C (n k)
+--   + @combinations n k@ :: C (n k)
+--------------------------------------------------------------------------------
+-- | Useful Haskell Functions
 --   + @minus l1 l2@ :: The minus/difference of two orderd lists l1 and l2
 --   + @union l1 l2@ :: The union of two orderd lists l1 and l2
 --------------------------------------------------------------------------------
@@ -57,9 +61,11 @@ module Euler
     ( primes
     , primeFactors
     , wheel
+    , isqrt
+    , permutations
+    , combinations
     , union
     , minus
-    , isqrt
     )
 where
 
@@ -112,20 +118,34 @@ primeFactors = factors primes
 
 
 --------------------------------------------------------------------------------
--- | Useful functions
+-- | Useful Math Functions
 -- | Integral sqrt of @n@.
 isqrt :: (Integral c, Integral a) => a -> c
 isqrt n = floor . sqrt $ (fromIntegral n :: Double)
 
 
+-- | Combinatorics
+-- permutations and combinations
+
+-- | permutations n k = P (n k) = n! / (n-k)!
+permutations :: Integral a => a -> a -> a
+permutations n k = product [n - k .. n]
+
+-- | combinations n k = C (n k) = n! / k!(n-k)!
+combinations :: Integral a => a -> a -> a
+combinations n k = product [n - k .. n] `div` product [1 .. n - k]
+
+
+--------------------------------------------------------------------------------
+-- | Useful Haskell Functions.
 -- | The minus/difference of two orderd lists.
 minus :: Ord a => [a] -> [a] -> [a]
 minus (x : xs) (y : ys) = case compare x y of
     LT -> x : minus xs (y : ys)
     EQ -> minus xs ys
     GT -> minus (x : xs) ys
-minus xs [] = xs
-minus [] xs = xs
+minus xs       []       = xs
+minus []       xs       = xs
 
 
 -- | The union of two orderd lists.
@@ -134,5 +154,5 @@ union (x : xs) (y : ys) = case compare x y of
     LT -> x : union xs (y : ys)
     EQ -> x : union xs ys
     GT -> y : union (x : xs) ys
-union xs [] = xs
-union [] ys = ys
+union xs       []       = xs
+union []       ys       = ys
