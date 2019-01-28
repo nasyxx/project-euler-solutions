@@ -66,9 +66,9 @@ import qualified Euler.Problem.P15             as P15
 data Answer = I Int Integer | Io Int (IO Integer) | Ios Int (IO String)
 
 showAnswer :: Answer -> IO String
-showAnswer (I   p ans) = pure $ "Problem " ++ show p ++ "\t:\t" ++ show ans
-showAnswer (Io  p ans) = (("Problem " ++ show p ++ "\t:\t") ++) . show <$> ans
-showAnswer (Ios p ans) = (("Problem " ++ show p ++ "\t:\t") ++) <$> ans
+showAnswer (I   p ans) = pure $ "Problem " ++ show p ++ "\t" ++ show ans
+showAnswer (Io  p ans) = (("Problem " ++ show p ++ "\t") ++) . show <$> ans
+showAnswer (Ios p ans) = (("Problem " ++ show p ++ "\t") ++) <$> ans
 
 answers :: [Answer]
 answers = zipWith set [1 ..] $ reverse
