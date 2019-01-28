@@ -60,6 +60,7 @@ import qualified Euler.Problem.P11             as P11
 import qualified Euler.Problem.P12             as P12
 import qualified Euler.Problem.P13             as P13
 import qualified Euler.Problem.P14             as P14
+import qualified Euler.Problem.P15             as P15
 
 
 data Answer = I Int Integer | Io Int (IO Integer) | Ios Int (IO String)
@@ -71,7 +72,8 @@ showAnswer (Ios p ans) = (("Problem " ++ show p ++ "\t:\t") ++) <$> ans
 
 answers :: [Answer]
 answers = zipWith set [1 ..] $ reverse
-    [ Left P14.ans
+    [ Left P15.ans
+    , Left P14.ans
     , Right $ Right P13.ans
     , Left P12.ans
     , Left P11.ans
