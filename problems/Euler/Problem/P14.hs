@@ -43,6 +43,14 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- https://github.com/nasyxx/project-euler-solutions
 -- https://projecteuler.net/problem=14
 --
+-- The point of this problem is to remember the sequence that has appeared
+-- before, saving lots of time.
+--
+-- I have tried to use List to memorize it, but it still cause lots of
+-- time when finding the largest one.  Thus, I change to use array, which
+-- can be quite fast.
+--
+-- Index of th array means the number, and the value is the length of sequence.
 --------------------------------------------------------------------------------
 
 module Euler.Problem.P14 where
@@ -55,7 +63,7 @@ import           Data.Array                     ( Array
                                                 , (!)
                                                 )
 
--- | Use List is tooooooooo slow when maximum it.
+-- | Using List is tooooooooo slow to maximum it.
 collatzLenL :: Int -> [Integer]
 collatzLenL n = collatzSeq
   where
