@@ -41,46 +41,67 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- Some useful function for Project Euler problems.
 --
 -- Include:
---------------------------------------------------------------------------------
--- | Useful Math Functions
---   + @isqrt n@ :: Integral sqrt of n.
---   + @permutations n k@ :: C (n k)
---   + @combinations n k@ :: C (n k)
---------------------------------------------------------------------------------
--- | Useful Haskell Functions
---   + @minus l1 l2@ :: The minus/difference of two orderd lists l1 and l2
---   + @union l1 l2@ :: The union of two orderd lists l1 and l2
---------------------------------------------------------------------------------
--- | Primes related functions
---   + @primes@ :: Infinite list of primes.
---   + @primeFactors n@ :: Prime factors of number n
---   + @wheel@ :: The wheel-210 for primes.
+--
+-- * Useful Math Functions
+--
+-- * Useful Haskell Functions
+--
+-- * Primes related functions
 --------------------------------------------------------------------------------
 
 module Euler
-    ( primes
+    (
+      -- * Primes Related Functions
+      -- |
+      -- [@primes@] Infinite list of primes.
+      --
+      -- [@primeFactors n@] Prime factors of number n
+      --
+      -- [@wheel@] The wheel-210 for primes.
+      primes
     , primeFactors
     , wheel
+    -- * Useful Math Functions
+    -- |
+    -- [@isqrt n@] Integral sqrt of n.
+    --
+    -- [@permutations n k@] P (n k)
+    --
+    -- [@combinations n k@] C (n k)
     , isqrt
+    -- ** Combinatorics
+    -- | permutations and combinations
     , permutations
     , combinations
+    -- * Useful Haskell Functions.
+    -- |
+    -- [@minus l1 l2@] The minus/difference of two orderd lists l1 and l2
+    --
+    -- [@union l1 l2@] The union of two orderd lists l1 and l2
     , union
     , minus
     )
 where
 
+
 --------------------------------------------------------------------------------
--- | Infinite list of primes.
+-- - Primes Related Functions
+--------------------------------------------------------------------------------
+
+-- | == Infinite list of primes.
 -- Using tree merging with wheel to generate infinite list of primes.
+--
 -- Reference
---   https://wiki.haskell.org/Prime_numbers#Tree_merging
---   https://wiki.haskell.org/Prime_numbers_miscellaneous#Implicit_Heap
+--
+--   * <https://wiki.haskell.org/Prime_numbers#Tree_merging>
+--
+--   * <https://wiki.haskell.org/Prime_numbers_miscellaneous#Implicit_Heap>
 primes :: [Integer]
 primes = 2 : 3 : 5 : 7 : r ((11 :) . tail . gaps 11 wheel . merge . roll)
     where r x = x (r x)
 
 
--- | Merge parts of results
+-- | Merge parts of results.
 -- It is equivalent to fold tree with union.
 merge :: Ord a => [[a]] -> [a]
 merge ~((p : ps) : t) = p : ps `union` merge (pairs t)
@@ -88,7 +109,8 @@ merge ~((p : ps) : t) = p : ps `union` merge (pairs t)
 
 
 -- | Wheel 210
--- loop:
+--
+-- [loop]
 -- 2 4 2 4 6 2 6 4 2 4 6 6 2 6 4 2 6 4 6 8 4 2  4 2
 -- 4 8 6 4 6 2 4 6 2 6 6 4 2 4 6 2 6 4 2 4 2 10 2 10
 wheel :: [Integer]
@@ -109,6 +131,13 @@ roll = map roll'
         map (p *) . dropWhile (< p) $ scanl (+) (p - (p - 11) `rem` 210) wheel
 
 
+-- | Prime factors of n
+--
+-- >>> primeFactors 10
+-- [2, 5]
+--
+-- >>> primeFactors 5
+-- [5]
 primeFactors :: Integer -> [Integer]
 primeFactors = factors primes
   where
@@ -118,26 +147,26 @@ primeFactors = factors primes
 
 
 --------------------------------------------------------------------------------
--- | Useful Math Functions
+-- - Useful Math Functions
+--------------------------------------------------------------------------------
+
 -- | Integral sqrt of @n@.
 isqrt :: (Integral c, Integral a) => a -> c
 isqrt n = floor . sqrt $ (fromIntegral n :: Double)
 
-
--- | Combinatorics
--- permutations and combinations
-
 -- | permutations n k = P (n k) = n! / (n-k)!
 permutations :: Integral a => a -> a -> a
-permutations n k = product [n - k .. n]
+permutations n k = product [n - k + 1 .. n]
 
 -- | combinations n k = C (n k) = n! / k!(n-k)!
 combinations :: Integral a => a -> a -> a
-combinations n k = product [n - k .. n] `div` product [1 .. n - k]
+combinations n k = product [n - k + 1 .. n] `div` product [1 .. n - k]
 
 
 --------------------------------------------------------------------------------
--- | Useful Haskell Functions.
+-- - Useful Haskell Functions
+--------------------------------------------------------------------------------
+
 -- | The minus/difference of two orderd lists.
 minus :: Ord a => [a] -> [a] -> [a]
 minus (x : xs) (y : ys) = case compare x y of
