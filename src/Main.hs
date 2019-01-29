@@ -48,6 +48,7 @@ import           Control.Monad                  ( mapM )
 import           Data.Char                      ( isNumber
                                                 , toLower
                                                 )
+import           System.Directory               ( doesFileExist )
 import           System.Environment             ( getArgs )
 --------------------------------------------------------------------------------
 import           Euler.Problem                  ( answers
@@ -55,7 +56,7 @@ import           Euler.Problem                  ( answers
                                                 , showAnswer
                                                 )
 --------------------------------------------------------------------------------
-data Command = Ans [String] | New String | Update | Unknown String | Empty
+data Command = Ans [String] | New [String] | Update | Unknown String | Empty
 
 data Effect = LIME | NAVY | RED | YELLOW | DEFAULT
 
@@ -74,7 +75,7 @@ with = \case
 parse :: [String] -> Command
 parse (cmd : args) = case cmd of
     "ans"    -> Ans args
-    "new"    -> New $ head args
+    "new"    -> New args
     "update" -> Update
     _        -> Unknown cmd
 parse []           = Empty
@@ -94,13 +95,32 @@ answer args@(a : _)
 
 execute :: Command -> IO String
 execute = \case
-    Ans args -> (unlines [header, empty] <>) <$> answer args
-    New _    -> pure "WIP"
-    Update   -> pure "WIP"
-    Empty    -> pure $ unlines [header, empty, cmds, ans, new]
-    Unknown cmd ->
-        pure $ unlines [header, empty, unknown cmd, empty, cmds, ans]
+    Ans args    -> (unlines [header, empty] <>) <$> answer args
+    New args    -> newParser args
+    Update      -> pure "WIP"
+    Empty       -> pul [header, empty, cmds, ans, new]
+    Unknown cmd -> pul [header, empty, unknown cmd, empty, cmds, ans]
   where
+    pul :: Applicative f => [String] -> f String
+    pul = pure . unlines
+
+    newParser [] =
+        pul
+            [ header
+            , empty
+            , with RED "The command new needs to specify a number n"
+            ]
+    newParser (p : ps)
+        | all isNumber p && null ps = doesFileExist path >>= \case
+            False ->
+                problem p
+                    <$> readFile "template/problem.hs"
+                    >>= writeFile path
+                    >>  pul [header, empty, with LIME "New Problem " ++ p]
+            True -> pul [header, empty, with RED "Problem " ++ p ++ " exist"]
+        | otherwise = pul
+            [header, empty, with RED "The command new only accepts a number n"]
+        where path = "problems/Euler/Problem/P" ++ p ++ ".hs"
     tab     = "\t"
     newline = "\n"
     empty   = ""
@@ -127,3 +147,9 @@ execute = \case
         , newline
         , with LIME "You may like to try:"
         ]
+
+
+problem :: String -> String -> String
+problem n str | '#' `elem` str = before ++ n ++ problem n after
+              | otherwise      = str
+    where (before, _ : after) = break (== '#') str
