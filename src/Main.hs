@@ -69,6 +69,7 @@ data Effect = LIME | NAVY | RED | YELLOW | DEFAULT
 counts :: IO Int
 counts =
     length
+
         .   filter (isSuffixOf ".hs")
         .   filter (isPrefixOf "P")
         <$> listDirectory "problems/Euler/Problem/"
@@ -83,7 +84,6 @@ with = \case
     RED     -> ("\x1b[0;31m" ++) . (++ "\x1b[0m")
     YELLOW  -> ("\x1b[1;33m" ++) . (++ "\x1b[0m")
     DEFAULT -> ("\x1b[0m" ++) . (++ "\x1b[0m")
-
 
 parse :: [String] -> Command
 parse (cmd : args) = case cmd of
@@ -103,9 +103,9 @@ answer args@(a : _)
   where
     ans n = do
         counts' <- counts
-        case (n < 1 || n > counts') of
-            True  -> pure . with RED $ "Problem " ++ show n ++ "\tNo answer"
-            False -> showAnswer $ answers !! (n - 1)
+        if n < 1 || n > counts'
+            then pure . with RED $ "Problem " ++ show n ++ "\tNo answer"
+            else showAnswer $ answers !! (n - 1)
 
 
 execute :: Command -> IO String
