@@ -26,6 +26,7 @@ ghc-options:
 dependencies:
   - array
   - base
+  - directory
   - pretty-simple
 
 executables:
