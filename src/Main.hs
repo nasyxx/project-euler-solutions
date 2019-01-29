@@ -48,17 +48,21 @@ import           Control.Monad                  ( mapM )
 import           Data.Char                      ( isNumber
                                                 , toLower
                                                 )
+import           Data.List                      ( intercalate )
 import           System.Directory               ( doesFileExist )
 import           System.Environment             ( getArgs )
+import           System.Process                 ( callCommand )
 --------------------------------------------------------------------------------
-import           Euler.Problem                  ( answers
-                                                , counts
+import           Euler.Answers                  ( answers
                                                 , showAnswer
                                                 )
 --------------------------------------------------------------------------------
 data Command = Ans [String] | New [String] | Update | Unknown String | Empty
 
 data Effect = LIME | NAVY | RED | YELLOW | DEFAULT
+
+counts :: Int
+counts = 15
 
 main :: IO ()
 main = getArgs >>= execute . parse >>= putStrLn
@@ -95,32 +99,46 @@ answer args@(a : _)
 
 execute :: Command -> IO String
 execute = \case
-    Ans args    -> (unlines [header, empty] <>) <$> answer args
-    New args    -> newParser args
-    Update      -> pure "WIP"
-    Empty       -> pul [header, empty, cmds, ans, new]
-    Unknown cmd -> pul [header, empty, unknown cmd, empty, cmds, ans]
+    Ans args -> (unlines [header, empty] <>) <$> answer args
+    New args -> newParser args
+    Update   -> upgrade
+    Empty    -> pul [header, empty, cmds, ans, new, update]
+    Unknown cmd ->
+        pul [header, empty, unknown cmd, empty, cmds, ans, new, update]
   where
     pul :: Applicative f => [String] -> f String
     pul = pure . unlines
 
-    newParser [] =
-        pul
-            [ header
-            , empty
-            , with RED "The command new needs to specify a number n"
-            ]
+    -- parser
+    newParser :: [String] -> IO String
+    newParser [] = pul
+        [ header
+        , empty
+        , tab ++ with RED "The command new needs to specify a number n"
+        ]
     newParser (p : ps)
         | all isNumber p && null ps = doesFileExist path >>= \case
             False ->
                 problem p
                     <$> readFile "template/problem.hs"
                     >>= writeFile path
-                    >>  pul [header, empty, with LIME "New Problem " ++ p]
-            True -> pul [header, empty, with RED "Problem " ++ p ++ " exist"]
+                    >>  pul [header, empty, tab ++ with LIME "New Problem " ++ p]
+            True ->
+                pul [header, empty, tab ++ with RED "Problem " ++ p ++ " exist"]
         | otherwise = pul
             [header, empty, with RED "The command new only accepts a number n"]
         where path = "problems/Euler/Problem/P" ++ p ++ ".hs"
+
+    upgrade :: IO String
+    upgrade =
+        readFile "template/answers-header.hs"
+            <>  pure updatePkg
+            <>  (updateAns <$> readFile "template/answers-body.hs")
+            >>= writeFile path
+            >>  callCommand ("brittany --write-mode inplace " ++ path)
+            >>  pul [header, empty, tab ++ with LIME "Updated Answers!"]
+        where path = "problems/Euler/Answers.hs"
+    -- some strings
     tab     = "\t"
     newline = "\n"
     empty   = ""
@@ -132,14 +150,22 @@ execute = \case
         , tab
         , with NAVY "Answer of problem n (Show all answers if left empty)"
         ]
-    new =
-        concat
-            [ tab
-            , with LIME "new"
-            , tab
-            , tab
-            , with NAVY "New problem with template."
-            ]
+    new     = concat
+        [ tab
+        , with LIME "new"
+        , tab
+        , tab
+        , tab
+        , with NAVY "New problem with template."
+        ]
+    update  = concat
+        [ tab
+        , with LIME "update"
+        , tab
+        , tab
+        , tab
+        , with NAVY "Update problem output code."
+        ]
     unknown cmd = concat
         [ with NAVY "Unknown command: "
         , with RED  cmd
@@ -153,3 +179,33 @@ problem :: String -> String -> String
 problem n str | '#' `elem` str = before ++ n ++ problem n after
               | otherwise      = str
     where (before, _ : after) = break (== '#') str
+
+
+updateAns :: String -> String
+updateAns str =
+    str
+        ++ "\n    [ Left P1.ans\n"
+        ++ prefix
+        ++ (intercalate prefix . map ans) [2 .. counts]
+        ++ "]\n"
+  where
+    prefix = "\n    , "
+    ans    = \case
+        6  -> "Left $ truncate P6.ans"
+        13 -> "Right $ Right P13.ans"
+        p  -> "Left P" ++ show p ++ ".ans"
+
+
+updatePkg :: String
+updatePkg =
+    ("\n" ++)
+        . (++ "\n")
+        . unlines
+        . map
+              (\p ->
+                  "import qualified Euler.Problem.P"
+                      ++ show p
+                      ++ " as P"
+                      ++ show p
+              )
+        $ [1 .. counts]

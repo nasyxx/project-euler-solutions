@@ -31,7 +31,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 --------------------------------------------------------------------------------
 -- |
--- Filename   : Problem.hs
+-- Filename   : answers.hs
 -- Project    : nasy-euler
 -- Author     : Nasy
 -- License    : GPL-3.0+
@@ -44,7 +44,12 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 --
 --------------------------------------------------------------------------------
 
-module Euler.Problem where
+module Euler.Answers
+    ( answers
+    , counts
+    , showAnswer
+    )
+where
 
 import qualified Euler.Problem.P1              as P1
 import qualified Euler.Problem.P2              as P2
@@ -62,7 +67,6 @@ import qualified Euler.Problem.P13             as P13
 import qualified Euler.Problem.P14             as P14
 import qualified Euler.Problem.P15             as P15
 
-
 data Answer = I Int Integer | Io Int (IO Integer) | Ios Int (IO String)
 
 showAnswer :: Answer -> IO String
@@ -70,28 +74,32 @@ showAnswer (I   p ans) = pure $ "Problem " ++ show p ++ "\t" ++ show ans
 showAnswer (Io  p ans) = (("Problem " ++ show p ++ "\t") ++) . show <$> ans
 showAnswer (Ios p ans) = (("Problem " ++ show p ++ "\t") ++) <$> ans
 
-answers :: [Answer]
-answers = zipWith set [1 ..] $ reverse
-    [ Left P15.ans
-    , Left P14.ans
-    , Right $ Right P13.ans
-    , Left P12.ans
-    , Left P11.ans
-    , Left P10.ans
-    , Left P9.ans
-    , Left P8.ans
-    , Left P7.ans
-    , Left $ truncate P6.ans
-    , Left P5.ans
-    , Left P4.ans
-    , Left P3.ans
-    , Left P2.ans
-    , Left P1.ans
-    ]
-  where
-    set idx (Left  ans        ) = I idx ans
-    set idx (Right (Left  ans)) = Io idx ans
-    set idx (Right (Right ans)) = Ios idx ans
+set :: Int -> Either Integer (Either (IO Integer) (IO String)) -> Answer
+set idx (Left  ans        ) = I idx ans
+set idx (Right (Left  ans)) = Io idx ans
+set idx (Right (Right ans)) = Ios idx ans
 
 counts :: Int
 counts = length answers
+
+answers :: [Answer]
+answers = zipWith
+    set
+    [1 ..]
+
+    [ Left P1.ans
+    , Left P2.ans
+    , Left P3.ans
+    , Left P4.ans
+    , Left P5.ans
+    , Left $ truncate P6.ans
+    , Left P7.ans
+    , Left P8.ans
+    , Left P9.ans
+    , Left P10.ans
+    , Left P11.ans
+    , Left P12.ans
+    , Right $ Right P13.ans
+    , Left P14.ans
+    , Left P15.ans
+    ]

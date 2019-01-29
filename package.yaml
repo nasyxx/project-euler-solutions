@@ -28,6 +28,7 @@ dependencies:
   - base
   - directory
   - pretty-simple
+  - process
 
 executables:
   Euler:
@@ -40,4 +41,4 @@ library:
   source-dirs:       problems
   exposed-modules:
   - Euler
-  - Euler.Problem
+  - Euler.Answers
