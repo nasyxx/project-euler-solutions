@@ -48,8 +48,13 @@ import           Control.Monad                  ( mapM )
 import           Data.Char                      ( isNumber
                                                 , toLower
                                                 )
-import           Data.List                      ( intercalate )
-import           System.Directory               ( doesFileExist )
+import           Data.List                      ( intercalate
+                                                , isSuffixOf
+                                                , isPrefixOf
+                                                )
+import           System.Directory               ( doesFileExist
+                                                , listDirectory
+                                                )
 import           System.Environment             ( getArgs )
 import           System.Process                 ( callCommand )
 --------------------------------------------------------------------------------
@@ -61,8 +66,12 @@ data Command = Ans [String] | New [String] | Update | Unknown String | Empty
 
 data Effect = LIME | NAVY | RED | YELLOW | DEFAULT
 
-counts :: Int
-counts = 15
+counts :: IO Int
+counts =
+    length
+        .   filter (isSuffixOf ".hs")
+        .   filter (isPrefixOf "P")
+        <$> listDirectory "problems/Euler/Problem/"
 
 main :: IO ()
 main = getArgs >>= execute . parse >>= putStrLn
@@ -92,9 +101,11 @@ answer args@(a : _)
     | all (all isNumber) args = with LIME . unlines <$> mapM (ans . read) args
     | otherwise               = pure $ with RED "Not a problem"
   where
-    ans n | n < 1 || n > counts =
-        pure . with RED $ "Problem " ++ show n ++ "\tNo answer"
-    ans n = showAnswer $ answers !! (n - 1)
+    ans n = do
+        counts' <- counts
+        case (n < 1 || n > counts') of
+            True  -> pure . with RED $ "Problem " ++ show n ++ "\tNo answer"
+            False -> showAnswer $ answers !! (n - 1)
 
 
 execute :: Command -> IO String
@@ -132,8 +143,9 @@ execute = \case
     upgrade :: IO String
     upgrade =
         readFile "template/answers-header.hs"
-            <>  pure updatePkg
-            <>  (updateAns <$> readFile "template/answers-body.hs")
+            <>  updatePkg
+            <>  readFile "template/answers-body.hs"
+            >>= updateAns
             >>= writeFile path
             >>  callCommand ("brittany --write-mode inplace " ++ path)
             >>  pul [header, empty, tab ++ with LIME "Updated Answers!"]
@@ -181,12 +193,14 @@ problem n str | '#' `elem` str = before ++ n ++ problem n after
     where (before, _ : after) = break (== '#') str
 
 
-updateAns :: String -> String
-updateAns str =
-    str
+updateAns :: String -> IO String
+updateAns str = do
+    counts' <- counts
+    pure
+        $  str
         ++ "\n    [ Left P1.ans\n"
         ++ prefix
-        ++ (intercalate prefix . map ans) [2 .. counts]
+        ++ (intercalate prefix . map ans) [2 .. counts']
         ++ "]\n"
   where
     prefix = "\n    , "
@@ -196,9 +210,11 @@ updateAns str =
         p  -> "Left P" ++ show p ++ ".ans"
 
 
-updatePkg :: String
-updatePkg =
-    ("\n" ++)
+updatePkg :: IO String
+updatePkg = do
+    counts' <- counts
+    pure
+        . ("\n" ++)
         . (++ "\n")
         . unlines
         . map
@@ -208,4 +224,4 @@ updatePkg =
                       ++ " as P"
                       ++ show p
               )
-        $ [1 .. counts]
+        $ [1 .. counts']
