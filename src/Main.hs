@@ -154,7 +154,7 @@ execute = \case
     tab     = "\t"
     newline = "\n"
     empty   = ""
-    header  = with YELLOW "Nasy's Project Solutions"
+    header  = with YELLOW "Nasy's Project Euler Solutions"
     cmds    = with YELLOW "COMMANDS:"
     ans     = concat
         [ tab
