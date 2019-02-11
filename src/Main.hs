@@ -207,6 +207,7 @@ updateAns str = do
     ans    = \case
         6  -> "Left $ truncate P6.ans"
         13 -> "Right $ Right P13.ans"
+        18 -> "Right $ Left P18.ans"
         p  -> "Left P" ++ show p ++ ".ans"
 
 
