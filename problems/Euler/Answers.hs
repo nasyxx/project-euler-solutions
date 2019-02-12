@@ -69,6 +69,7 @@ import qualified Euler.Problem.P15             as P15
 import qualified Euler.Problem.P16             as P16
 import qualified Euler.Problem.P17             as P17
 import qualified Euler.Problem.P18             as P18
+import qualified Euler.Problem.P19             as P19
 
 data Answer = I Int Integer | Io Int (IO Integer) | Ios Int (IO String)
 
@@ -108,4 +109,5 @@ answers = zipWith
     , Left P16.ans
     , Left P17.ans
     , Right $ Left P18.ans
+    , Left P19.ans
     ]
