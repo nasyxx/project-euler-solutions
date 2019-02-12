@@ -46,7 +46,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- How many Sundays fell on the first of the month during the twentieth
 -- century (1 Jan 1901 to 31 Dec 2000)?
 --
--- We can calculate the weekday of the first day of the next month
+-- We can calculate the first day of week of the next month
 -- since 1900.1 as:
 --
 --   ( 1(Monday) + 31 ) `mod` 7 = 4(Thursday)
@@ -54,13 +54,18 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 -- and next is
 --   (4 + 28) `mod` 7 = 4
 --
--- Thus, we can get all weekdays since 1900.  Then we get the answer.
+-- Thus, we can get the first day of week of all month since 1900.
+-- Then we get the answer.
+--
+-- Besides, there is an easy way to calculate the day of week
+--
+--   <https://en.wikipedia.org/wiki/Zeller%27s_congruence>
 --------------------------------------------------------------------------------
 
 module Euler.Problem.P19 where
 
 ans :: Integer
-ans = toInteger . length . filter (== 0) $ drop 12 weekdays
+ans = toInteger . length . filter (== 0) $ drop 12 dayOfWeek
 
 leap :: [Integer]
 notleap :: [Integer]
@@ -71,5 +76,5 @@ twentiethCentury :: [Integer]
 twentiethCentury =
     take (101 * 12) . concat $ notleap : cycle (replicate 3 notleap ++ [leap])
 
-weekdays :: [Integer]
-weekdays = scanl (\p n -> (p + n) `mod` 7) 1 twentiethCentury
+dayOfWeek :: [Integer]
+dayOfWeek = scanl (\p n -> (p + n) `mod` 7) 1 twentiethCentury
