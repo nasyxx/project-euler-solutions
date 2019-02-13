@@ -51,13 +51,13 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 module Euler
     (
-      -- * Primes Related Functions
-      -- |
-      -- [@primes@] Infinite list of primes.
-      --
-      -- [@primeFactors n@] Prime factors of number n
-      --
-      -- [@wheel@] The wheel-210 for primes.
+    -- * Primes Related Functions
+    -- |
+    -- [@primes@] Infinite list of primes.
+    --
+    -- [@primeFactors n@] Prime factors of number n
+    --
+    -- [@wheel@] The wheel-210 for primes.
       primes
     , primeFactors
     , wheel
