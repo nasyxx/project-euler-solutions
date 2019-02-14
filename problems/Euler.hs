@@ -160,7 +160,7 @@ permutations n k = product [n - k + 1 .. n]
 
 -- | combinations n k = C (n k) = n! / k!(n-k)!
 combinations :: Integral a => a -> a -> a
-combinations n k = product [n - k + 1 .. n] `div` product [1 .. n - k]
+combinations n k = product [n - k + 1 .. n] `div` product [1 .. k]
 
 
 --------------------------------------------------------------------------------
