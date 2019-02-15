@@ -67,15 +67,15 @@ module Euler
     --
     -- [@factorial n@] n!
     --
-    -- [@permutations n k@] P (n k)
+    -- [@permutationsCount n k@] P (n k)
     --
-    -- [@combinations n k@] C (n k)
+    -- [@combinationsCount n k@] C (n k)
     , isqrt
     , factorial
-    -- ** Combinatorics
-    -- | permutations and combinations
-    , permutations
-    , combinations
+    -- ** Combinatorics Count
+    -- | permutationsCount and combinationsCount
+    , permutationsCount
+    , combinationsCount
     -- * Useful Haskell Functions.
     -- |
     -- [@minus l1 l2@] The minus/difference of two orderd lists l1 and l2
@@ -162,13 +162,13 @@ factorial :: Integral a => a -> a
 factorial 0 = 1
 factorial n = product [1 .. n]
 
--- | permutations n k = P (n k) = n! / (n-k)!
-permutations :: Integral a => a -> a -> a
-permutations n k = product [n - k + 1 .. n]
+-- | permutationsCount n k = P (n k) = n! / (n-k)!
+permutationsCount :: Integral a => a -> a -> a
+permutationsCount n k = product [n - k + 1 .. n]
 
--- | combinations n k = C (n k) = n! / k!(n-k)!
-combinations :: Integral a => a -> a -> a
-combinations n k = product [n - k + 1 .. n] `div` product [1 .. k]
+-- | combinationsCount n k = C (n k) = n! / k!(n-k)!
+combinationsCount :: Integral a => a -> a -> a
+combinationsCount n k = product [n - k + 1 .. n] `div` product [1 .. k]
 
 --------------------------------------------------------------------------------
 -- - Useful Haskell Functions

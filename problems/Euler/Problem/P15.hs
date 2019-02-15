@@ -54,7 +54,7 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 
 module Euler.Problem.P15 where
 
-import           Euler                          ( combinations )
+import           Euler                          ( combinationsCount )
 
 ans :: Integer
-ans = combinations 40 20
+ans = combinationsCount 40 20
