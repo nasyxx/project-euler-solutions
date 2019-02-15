@@ -42,3 +42,4 @@ library:
   exposed-modules:
   - Euler
   - Euler.Answers
+  - Euler.Problem.P21
