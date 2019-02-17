@@ -76,6 +76,14 @@ module Euler
     -- | permutationsCount and combinationsCount
     , permutationsCount
     , combinationsCount
+    -- * Simple Matrix
+    -- | A simple matrix (Only for M x M)
+    , Matrix(Matrix)
+    , zeros
+    , ones
+    , fromLists
+    , transpose
+    , (.*.)
     -- * Useful Haskell Functions.
     -- |
     -- [@minus l1 l2@] The minus/difference of two orderd lists l1 and l2
@@ -86,6 +94,8 @@ module Euler
     )
 where
 
+import qualified Data.List                     as L
+                                                ( transpose )
 
 --------------------------------------------------------------------------------
 -- - Primes Related Functions
@@ -169,6 +179,62 @@ permutationsCount n k = product [n - k + 1 .. n]
 -- | combinationsCount n k = C (n k) = n! / k!(n-k)!
 combinationsCount :: Integral a => a -> a -> a
 combinationsCount n k = product [n - k + 1 .. n] `div` product [1 .. k]
+
+--------------------------------------------------------------------------------
+-- - Simple Matrix
+--------------------------------------------------------------------------------
+
+newtype Matrix a = Matrix [[a]] deriving (Eq, Show)
+
+-- | The zero matrix of given size m n.
+--
+-- > ones m n =
+-- >       1         n
+-- >   1 | 1, 1, .., 1 |
+-- >   2 | 1, 1, .., 1 |
+-- >     | ..          |
+-- >   m | 1, 1, .., 1 |
+ones :: Num a => Integer -> Integer -> Matrix a
+ones m n = Matrix [ [ 1 | _ <- [1 .. n] ] | _ <- [1 .. m] ]
+
+-- | The zero matrix of given size m n.
+--
+-- > zeros m n =
+-- >       1         n
+-- >   1 | 0, 0, .., 0 |
+-- >   2 | 0, 0, .., 0 |
+-- >     | ..          |
+-- >   m | 0, 0, .., 0 |
+zeros :: Num a => Integer -> Integer -> Matrix a
+zeros m n = Matrix [ [ 0 | _ <- [1 .. n] ] | _ <- [1 .. m] ]
+
+-- | Construct a matrix from lists of list.
+--
+-- > fromLists [[1,2], [3,4]] =
+-- >   | 1, 2 |
+-- >   | 3, 4 |
+fromLists :: Num a => [[a]] -> Matrix a
+fromLists = Matrix
+
+instance Num a => Num (Matrix a) where
+    Matrix a + Matrix b = Matrix $ zipWith (zipWith (+)) a b
+    Matrix a - Matrix b = Matrix $ zipWith (zipWith (-)) a b
+    (*)    = (.*.)
+    negate = fmap negate
+    abs    = fmap abs
+    signum _ = 1
+    fromInteger n = zeros n n
+
+instance Functor Matrix where
+    fmap f (Matrix a) = Matrix $ map (map f) a
+
+(.*.) :: Num a => Matrix a -> Matrix a -> Matrix a
+Matrix m1 .*. Matrix m2 =
+    Matrix [ [ sum $ zipWith (*) m n | n <- L.transpose m2 ] | m <- m1 ]
+
+
+transpose :: Matrix a -> Matrix a
+transpose (Matrix a) = Matrix (L.transpose a)
 
 --------------------------------------------------------------------------------
 -- - Useful Haskell Functions
