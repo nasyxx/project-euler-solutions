@@ -84,6 +84,10 @@ module Euler
     , fromLists
     , transpose
     , (.*.)
+    -- * Fibonacci Sequence
+    -- | A really fast nth fibonacci number and a infinite sequence.
+    , fibonacci
+    , fibonaccis
     -- * Useful Haskell Functions.
     -- |
     -- [@minus l1 l2@] The minus/difference of two orderd lists l1 and l2
@@ -235,6 +239,27 @@ Matrix m1 .*. Matrix m2 =
 
 transpose :: Matrix a -> Matrix a
 transpose (Matrix a) = Matrix (L.transpose a)
+
+--------------------------------------------------------------------------------
+-- - Fibonacci Sequence
+--------------------------------------------------------------------------------
+
+-- | The nth number in Fibonacci Sequence.  Implement with 'Matrix' in "Euler".
+--
+-- > fibonacci 1 = 1
+-- > fibonacci 2 = 1
+-- > fibonacci 3 = 2
+fibonacci :: (Integral b, Num c) => b -> c
+fibonacci n = head . last $ fib
+    where (Matrix fib) = Matrix [[0, 1], [1, 1]] ^ n
+
+-- | Infinite Fibonaccis Sequence.
+--
+-- > fibonaccis !! 1 = 1
+-- > fibonaccis !! 2 = 1
+-- > fibonaccis !! 3 = 2
+fibonaccis :: [Integer]
+fibonaccis = 0 : 1 : zipWith (+) fibonaccis (tail fibonaccis)
 
 --------------------------------------------------------------------------------
 -- - Useful Haskell Functions
