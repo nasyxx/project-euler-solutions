@@ -45,6 +45,27 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 --
 -- Find the value of d < 1000 for which 1/d contains
 -- the longest recurring cycle in its decimal fraction part.
+--
+-- To find the decimal fraction part of a number, we need to
+-- compare the remainders from 10^n divided by it.  For example:
+--
+-- > 1         / 7 = 0.(142857)
+-- > 1         / 7 = 0........1 <--
+-- > 10        / 7 = 1........3
+-- > 100       / 7 = 14.......2
+-- > 1000      / 7 = 142......6
+-- > 10000     / 7 = 1428.....4
+-- > 100000    / 7 = 14285....5
+-- > 1000000   / 7 = 142857...1 <--
+-- > 10000000  / 7 = 1428571..3
+--
+-- The list of remainders is [1,3,2,6,4,5,1,3,..].  To easily find
+-- out the recurring cycle of remainders, we can reverse the list.
+--
+-- > r   rs
+-- > 1 : [5,4,6,2,3,1]
+--
+-- The index of 1 in rs is 5, so the count of the recurring cyclc is 5+1 = 6.
 --------------------------------------------------------------------------------
 
 module Euler.Problem.P26 where
@@ -59,7 +80,7 @@ ans = fst . maximumBy (comparing snd) $ map
     [1 .. 999]
 
 remainders :: Integral a => a -> [a]
-remainders n = iterate ((`mod` n) . (* 10)) 1
+remainders n = iterate ((`rem` n) . (* 10)) 1
 
 rcycle :: (Eq a, Num a) => [a] -> [a] -> Int
 rcycle _  []        = 0
