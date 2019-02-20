@@ -55,11 +55,14 @@ module Euler
     -- |
     -- [@primes@] Infinite list of primes.
     --
-    -- [@primeFactors n@] Prime factors of number n
+    -- [@primeFactors n@] Prime factors of number n.
+    --
+    -- [@isPrime n@] Check the number n is prime or not.
     --
     -- [@wheel@] The wheel-210 for primes.
       primes
     , primeFactors
+    , isPrime
     , wheel
     -- * Useful Math Functions
     -- |
@@ -78,6 +81,16 @@ module Euler
     , combinationsCount
     -- * Simple Matrix
     -- | A simple matrix (Only for M x M)
+    --
+    -- [@zeros m n@] The zero matrix of given size m n.
+    --
+    -- [@ones m n@] The unit matrix of given size m n.
+    --
+    -- [@fromLists ls@] Make matrix from lists like @[[1,2], [2,3]]@.
+    --
+    -- [@transpose m@] Transpose a matrix.
+    --
+    -- [@m1 .*. m2@] Dot product of two matrix.
     , Matrix(Matrix)
     , zeros
     , ones
@@ -86,6 +99,10 @@ module Euler
     , (.*.)
     -- * Fibonacci Sequence
     -- | A really fast nth fibonacci number and a infinite sequence.
+    --
+    -- [@fibonacci @] The nth fibonacci number.
+    --
+    -- [@fibonaccis@] 0,1,1,2,3,5,8,.. Infinite fibonacci sequence.
     , fibonacci
     , fibonaccis
     -- * Useful Haskell Functions.
@@ -163,6 +180,17 @@ primeFactors = factors primes
                             | otherwise      = factors ps' n
 
 
+-- | Check the number n is prime or not.
+--
+-- > isPrime 2 = True
+-- > isPrime 3 = True
+-- > isPrime 4 = False
+isPrime :: Integer -> Bool
+isPrime 0 = False
+isPrime 1 = False
+isPrime n = primeFactors n == [n]
+
+
 --------------------------------------------------------------------------------
 -- - Useful Math Functions
 --------------------------------------------------------------------------------
@@ -190,7 +218,7 @@ combinationsCount n k = product [n - k + 1 .. n] `div` product [1 .. k]
 
 newtype Matrix a = Matrix [[a]] deriving (Eq, Show)
 
--- | The zero matrix of given size m n.
+-- | The unit matrix of given size m n.
 --
 -- > ones m n =
 -- >       1         n
@@ -232,11 +260,12 @@ instance Num a => Num (Matrix a) where
 instance Functor Matrix where
     fmap f (Matrix a) = Matrix $ map (map f) a
 
+-- | Dot product of two matrices.
 (.*.) :: Num a => Matrix a -> Matrix a -> Matrix a
 Matrix m1 .*. Matrix m2 =
     Matrix [ [ sum $ zipWith (*) m n | n <- L.transpose m2 ] | m <- m1 ]
 
-
+-- | Transpose a matrix.
 transpose :: Matrix a -> Matrix a
 transpose (Matrix a) = Matrix (L.transpose a)
 
