@@ -45,20 +45,24 @@ There are more things in heaven and earth, Horatio, than are dreamt.
 --
 -- Evaluate the sum of all the amicable numbers under 10000.
 --
--- | == Sum divisors
+-- == Sum divisors
 -- A number n has prime factors p1, p2, ..., pn
 --
---   n = p1^a1 * p2^a2 * ... * pn^an
+-- > n = p1^a1 * p2^a2 * ... * pn^an
 --
 -- The sum of divisors of a prime p is 1+p.
 --
 -- We can calculate the sum of divisors of p ^ a as:
 --
---   s p = 1 + p + p^2 + p^3 + .. + p^a = (p^(a+1) - 1)/(p - 1)
+-- > s p = 1 + p + p^2 + p^3 + .. + p^a = (p^(a+1) - 1)/(p - 1)
 --
--- Thus, s n = (s p1) * (s p2) * .. * (s pn)
+-- Thus,
 --
--- And, d n = s n - n
+-- > s n = (s p1) * (s p2) * .. * (s pn)
+--
+-- And,
+--
+-- > d n = s n - n
 --------------------------------------------------------------------------------
 
 module Euler.Problem.P21 where
