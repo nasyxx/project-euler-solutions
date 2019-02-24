@@ -131,8 +131,8 @@ import qualified Data.List                     as L
 --
 --   * <https://wiki.haskell.org/Prime_numbers_miscellaneous#Implicit_Heap>
 primes :: [Integer]
-primes = 2 : 3 : 5 : 7 : r ((11 :) . tail . gaps 11 wheel . merge . roll)
-    where r x = x (r x)
+primes = 2 : 3 : 5 : 7 : y ((11 :) . tail . gaps 11 wheel . merge . roll)
+    where y x = x (y x)
 
 
 -- | Merge parts of results.
